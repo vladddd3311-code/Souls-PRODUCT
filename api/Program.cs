@@ -162,16 +162,11 @@ app.MapGet("/public/config", () => Results.Ok(new
 }));
 
 app.MapGet("/downloads/SoulsDLC-Launcher-WINDOWS-V15.exe", () =>
-    Results.File(
-        Path.Combine(app.Environment.WebRootPath, "downloads", "SoulsDLC-Launcher-WINDOWS-V15.exe"),
-        "application/octet-stream",
-        "SoulsDLC-Launcher-WINDOWS-V15.exe"));
+    Results.Redirect("/downloads/SoulsDLC-Launcher-HOSTED.exe"));
 
 app.MapGet("/downloads/SoulsDLC-Launcher-HOSTED.exe", () =>
-    Results.File(
-        Path.Combine(app.Environment.WebRootPath, "downloads", "SoulsDLC-Launcher-HOSTED.exe"),
-        "application/octet-stream",
-        "SoulsDLC-Launcher-HOSTED.exe"));
+    Results.Redirect(app.Configuration["LAUNCHER_DOWNLOAD_URL"]
+        ?? "https://github.com/vladddd3311-code/Souls-PRODUCT/releases/download/v2.4.2-launcher-v16/SoulsDLC-Launcher-HOSTED.exe"));
 app.MapGet("/downloads/SoulsDLC-Launcher.exe", () =>
     Results.Redirect("/downloads/SoulsDLC-Launcher-HOSTED.exe", permanent: false));
 
