@@ -1,0 +1,88 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Prime Keys</title>
+  <style>
+    body{margin:0;background:#09090d;color:#f4f4f7;font:14px Arial,sans-serif}
+    main{max-width:980px;margin:0 auto;padding:28px}
+    h1{margin:0 0 18px;font-size:28px}
+    section{border:1px solid #282838;background:#11111a;padding:18px;margin:14px 0;border-radius:8px}
+    label{display:block;color:#b9b9c8;margin:10px 0 6px}
+    input,textarea,button{font:inherit}
+    input,textarea{width:100%;box-sizing:border-box;background:#08080d;color:#fff;border:1px solid #34344a;border-radius:6px;padding:10px}
+    button{background:#7c5cff;color:white;border:0;border-radius:6px;padding:10px 14px;cursor:pointer}
+    button.secondary{background:#2d2d3d}
+    table{width:100%;border-collapse:collapse;margin-top:12px}
+    th,td{border-bottom:1px solid #282838;padding:9px;text-align:left;vertical-align:top}
+    code{background:#050509;border:1px solid #242435;border-radius:5px;padding:3px 5px}
+    .row{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+    .status{min-height:20px;color:#8df0b0}
+    @media(max-width:700px){.row{grid-template-columns:1fr}main{padding:16px}}
+  </style>
+</head>
+<body>
+<main>
+  <h1>Prime Keys</h1>
+  <section>
+    <label>ADMIN_KEY</label>
+    <input id="adminKey" type="password" autocomplete="off">
+  </section>
+  <section>
+    <h2>Создать ключ</h2>
+    <div class="row">
+      <div><label>Покупатель</label><input id="buyer" placeholder="TigerRW"></div>
+      <div><label>Свой ключ (можно пусто)</label><input id="customKey" placeholder="PRIME-...."></div>
+    </div>
+    <label>Заметка</label>
+    <textarea id="notes" rows="2"></textarea>
+    <p><button id="create">Создать</button> <button class="secondary" id="refresh">Обновить список</button></p>
+    <p class="status" id="status"></p>
+  </section>
+  <section>
+    <h2>Ключи</h2>
+    <table>
+      <thead><tr><th>Ключ</th><th>Покупатель</th><th>Статус</th><th>HWID</th><th>Действие</th></tr></thead>
+      <tbody id="keys"></tbody>
+    </table>
+  </section>
+</main>
+<script>
+const $ = id => document.getElementById(id);
+const headers = () => ({ "Content-Type": "application/json", "X-Admin-Key": $("adminKey").value });
+async function api(path, options = {}) {
+  const res = await fetch(path, { ...options, headers: { ...headers(), ...(options.headers || {}) } });
+  if (!res.ok) throw new Error(await res.text() || res.status);
+  const text = await res.text();
+  return text ? JSON.parse(text) : {};
+}
+async function load() {
+  const rows = await api("/prime/admin/keys");
+  $("keys").innerHTML = rows.map(r => `<tr>
+    <td><code>${r.key || r.Key}</code></td>
+    <td>${r.buyer || r.Buyer || ""}<br><small>${r.notes || r.Notes || ""}</small></td>
+    <td>${(r.active ?? r.Active) ? "active" : "off"}<br><small>${r.lastSeenAt || r.LastSeenAt || ""}</small></td>
+    <td><small>${r.hwidHash || r.HwidHash || ""}</small></td>
+    <td><button data-action="state" data-key="${r.key || r.Key}" data-active="${!(r.active ?? r.Active)}">${(r.active ?? r.Active) ? "Выключить" : "Включить"}</button> <button data-action="reset" data-key="${r.key || r.Key}">HWID reset</button></td>
+  </tr>`).join("");
+}
+$("create").onclick = async () => {
+  const body = { buyer: $("buyer").value, notes: $("notes").value, key: $("customKey").value };
+  const result = await api("/prime/admin/keys", { method: "POST", body: JSON.stringify(body) });
+  $("status").textContent = "Создан: " + result.key;
+  await load();
+};
+$("refresh").onclick = load;
+$("keys").onclick = async e => {
+  if (e.target.tagName !== "BUTTON") return;
+  if (e.target.dataset.action === "reset") {
+    await api("/prime/admin/keys/reset-hwid", { method: "POST", body: JSON.stringify({ key: e.target.dataset.key }) });
+  } else {
+    await api("/prime/admin/keys/state", { method: "POST", body: JSON.stringify({ key: e.target.dataset.key, active: e.target.dataset.active === "true" }) });
+  }
+  await load();
+};
+</script>
+</body>
+</html>

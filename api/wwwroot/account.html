@@ -1,0 +1,71 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>SoulsDLC — Личный кабинет</title>
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body class="account-body">
+  <header class="nav portal-nav">
+    <a class="brand" href="./index.html"><img src="./assets/soulsdlc-logo.png" alt=""><span>SoulsDLC</span><small>1.21.4</small></a>
+    <nav><a href="https://t.me/SoulsDLC" target="_blank" rel="noopener">Поддержка</a><a href="./downloads/SoulsDLC-Launcher-HOSTED.exe" download>Скачать лаунчер</a><a href="./index.html#pricing">Подписка</a></nav>
+    <div class="nav-actions"><a class="social-mini" href="https://t.me/SoulsDLC" target="_blank">TG</a><a class="social-mini" href="https://discord.gg/6bVKtwGtr" target="_blank">DS</a><a class="nav-account active" href="./account.html">Личный кабинет</a></div>
+  </header>
+
+  <main class="portal-shell">
+    <section id="authPanel" class="auth-panel portal-auth">
+      <div class="auth-title"><img src="./assets/soulsdlc-logo.png" alt=""><div><span class="eyebrow">SOULSDLC ID</span><h1>Твой кабинет</h1><p>Войди, чтобы увидеть подписку и привязку устройства.</p></div></div>
+      <div class="auth-tabs"><button class="active" data-mode="login">Вход</button><button data-mode="register">Регистрация</button></div>
+      <label id="nameField" hidden>Имя аккаунта<input id="name" autocomplete="username" placeholder="Ваш ник"></label>
+      <label id="botField" hidden><span id="botQuestion">Проверка</span><input id="botAnswer" inputmode="numeric" autocomplete="off" placeholder="Ответ"></label>
+      <label>Email<input id="email" type="email" autocomplete="email" placeholder="name@example.com"></label>
+      <label>Пароль<input id="password" type="password" autocomplete="current-password" placeholder="Минимум 8 символов"></label>
+      <button id="authSubmit" class="button primary wide">Войти</button>
+      <button id="forgotPassword" class="text-action" type="button" hidden>Забыли пароль?</button>
+      <a class="text-action" href="https://t.me/SoulsDLC" target="_blank" rel="noopener">Нужна помощь со входом?</a>
+      <p id="authStatus" class="status"></p>
+    </section>
+
+    <section id="resetPanel" class="auth-panel portal-auth" hidden>
+      <div class="auth-title"><img src="./assets/soulsdlc-logo.png" alt=""><div><span class="eyebrow">SOULSDLC ID</span><h1>Восстановление пароля</h1></div></div>
+      <label>Email<input id="resetEmail" type="email" autocomplete="email" placeholder="name@example.com"></label>
+      <button id="sendResetCode" class="button primary wide" type="button">Отправить код</button>
+      <label>Код из письма<input id="resetCode" inputmode="numeric" autocomplete="one-time-code" maxlength="6" placeholder="123456"></label>
+      <label>Новый пароль<input id="resetPassword" type="password" autocomplete="new-password" placeholder="Минимум 8 символов"></label>
+      <button id="resetPasswordSubmit" class="button primary wide" type="button">Установить новый пароль</button>
+      <button id="resetBack" class="text-action" type="button">Назад ко входу</button>
+      <p id="resetStatus" class="status"></p>
+    </section>
+
+    <section id="profilePanel" class="cabinet" hidden>
+      <div class="cabinet-heading"><div><span class="eyebrow">SOULSDLC ACCOUNT</span><h1>Привет, <span id="profileGreeting">игрок</span></h1><p>Здесь отображаются твой доступ и привязка устройства.</p></div><img src="./assets/soulsdlc-logo.png" alt=""></div>
+      <div class="dashboard-metrics"><div><small>ПОДПИСКА</small><strong id="subscriptionDays">0 дней</strong><span id="subscriptionCaption">Доступ не активен</span></div><div><small>УСТРОЙСТВО</small><strong id="deviceHeadline">Не привязано</strong><span>Привязка выполняется через лаунчер</span></div></div>
+      <div class="account-rows">
+        <div class="account-row"><b>UID</b><span id="profileUid">—</span></div>
+        <div class="account-row"><b>Логин</b><span id="profileName">Player</span></div>
+        <div class="account-row"><b>Группа</b><span id="profileRole">Пользователь</span></div>
+        <div class="account-row"><b>E-mail</b><span id="profileEmail">—</span></div>
+        <div class="account-row"><b>HWID</b><span id="profileDevice">Не привязан</span></div>
+        <div class="account-row"><b>Подписка</b><span id="premiumStatus">Не активна</span></div>
+        <div class="account-row key-row"><b>Активация ключа</b><input id="subscriptionKey" placeholder="Введите ключ"><button id="activateKey" class="row-action">Активировать</button></div>
+      </div>
+      <p id="profileStatus" class="status"></p>
+      <div class="cabinet-actions">
+        <a class="button primary" href="./index.html#pricing">Купить клиент</a>
+        <a class="button secondary" href="./downloads/SoulsDLC-Launcher-HOSTED.exe" download>Скачать лаунчер</a>
+        <a class="button secondary" href="https://t.me/SoulsDLC" target="_blank">Telegram</a>
+        <a class="button secondary" href="https://discord.gg/6bVKtwGtr" target="_blank">Discord</a>
+        <button id="logout" class="button secondary logout">Выйти</button>
+      </div>
+    </section>
+
+    <section id="devicePanel" class="device-panel" hidden>
+      <div><span class="eyebrow">ВХОД В ЛАУНЧЕР</span><h2>Подтвердить вход</h2><p>Код <b id="deviceCode"></b> запросил SoulsDLC Launcher.</p></div>
+      <button id="authorizeDevice" class="button primary">Разрешить вход</button>
+      <p id="deviceStatus" class="status"></p>
+    </section>
+  </main>
+  <script src="./app.js"></script>
+</body>
+</html>

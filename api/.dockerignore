@@ -1,0 +1,5 @@
+bin
+obj
+web.config
+appsettings*.json
+*.log

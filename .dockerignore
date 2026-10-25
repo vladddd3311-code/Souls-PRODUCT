@@ -1,0 +1,6 @@
+.git
+**/bin
+**/obj
+**/web.config
+**/appsettings*.json
+**/*.clixml

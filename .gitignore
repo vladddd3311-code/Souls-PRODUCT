@@ -1,0 +1,11 @@
+**/bin/
+**/obj/
+**/.env*
+**/web.config
+**/appsettings*.json
+**/wwwroot/downloads/
+*.exe
+*.jar
+*.zip
+*.clixml
+*.log
